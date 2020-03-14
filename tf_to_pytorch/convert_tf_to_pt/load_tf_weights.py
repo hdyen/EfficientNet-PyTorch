@@ -2,6 +2,7 @@ import numpy as np
 import tensorflow as tf
 import torch
 
+
 def load_param(checkpoint_file, conversion_table, model_name):
     """
     Load parameters according to conversion_table.
@@ -11,7 +12,7 @@ def load_param(checkpoint_file, conversion_table, model_name):
         conversion_table (dict): { pytorch tensor in a model : checkpoint variable name }
     """
     for pyt_param, tf_param_name in conversion_table.items():
-        tf_param_name = str(model_name) + '/' +  tf_param_name
+        tf_param_name = str(model_name) + '/' + tf_param_name
         tf_param = tf.train.load_variable(checkpoint_file, tf_param_name)
         if 'conv' in tf_param_name and 'kernel' in tf_param_name:
             tf_param = np.transpose(tf_param, (3, 2, 0, 1))
@@ -95,25 +96,25 @@ def load_efficientnet(model, checkpoint_file, model_name):
 
         else:
             conversion_table_block = {
-                model._blocks[i]._expand_conv.weight:       'blocks_' + str(i) + '/conv2d/kernel',
-                model._blocks[i]._project_conv.weight:      'blocks_' + str(i) + '/conv2d_1/kernel',
-                model._blocks[i]._depthwise_conv.weight:    'blocks_' + str(i) + '/depthwise_conv2d/depthwise_kernel',
-                model._blocks[i]._se_reduce.bias:           'blocks_' + str(i) + '/se/conv2d/bias',
-                model._blocks[i]._se_reduce.weight:         'blocks_' + str(i) + '/se/conv2d/kernel',
-                model._blocks[i]._se_expand.bias:           'blocks_' + str(i) + '/se/conv2d_1/bias',
-                model._blocks[i]._se_expand.weight:         'blocks_' + str(i) + '/se/conv2d_1/kernel',
-                model._blocks[i]._bn0.bias:                 'blocks_' + str(i) + '/tpu_batch_normalization/beta',
-                model._blocks[i]._bn0.weight:               'blocks_' + str(i) + '/tpu_batch_normalization/gamma',
-                model._blocks[i]._bn0.running_mean:         'blocks_' + str(i) + '/tpu_batch_normalization/moving_mean',
-                model._blocks[i]._bn0.running_var:          'blocks_' + str(i) + '/tpu_batch_normalization/moving_variance',
-                model._blocks[i]._bn1.bias:                 'blocks_' + str(i) + '/tpu_batch_normalization_1/beta',
-                model._blocks[i]._bn1.weight:               'blocks_' + str(i) + '/tpu_batch_normalization_1/gamma',
-                model._blocks[i]._bn1.running_mean:         'blocks_' + str(i) + '/tpu_batch_normalization_1/moving_mean',
-                model._blocks[i]._bn1.running_var:          'blocks_' + str(i) + '/tpu_batch_normalization_1/moving_variance',
-                model._blocks[i]._bn2.bias:                 'blocks_' + str(i) + '/tpu_batch_normalization_2/beta',
-                model._blocks[i]._bn2.weight:               'blocks_' + str(i) + '/tpu_batch_normalization_2/gamma',
-                model._blocks[i]._bn2.running_mean:         'blocks_' + str(i) + '/tpu_batch_normalization_2/moving_mean',
-                model._blocks[i]._bn2.running_var:          'blocks_' + str(i) + '/tpu_batch_normalization_2/moving_variance',
+                model._blocks[i]._expand_conv.weight: 'blocks_' + str(i) + '/conv2d/kernel',
+                model._blocks[i]._project_conv.weight: 'blocks_' + str(i) + '/conv2d_1/kernel',
+                model._blocks[i]._depthwise_conv.weight: 'blocks_' + str(i) + '/depthwise_conv2d/depthwise_kernel',
+                model._blocks[i]._se_reduce.bias: 'blocks_' + str(i) + '/se/conv2d/bias',
+                model._blocks[i]._se_reduce.weight: 'blocks_' + str(i) + '/se/conv2d/kernel',
+                model._blocks[i]._se_expand.bias: 'blocks_' + str(i) + '/se/conv2d_1/bias',
+                model._blocks[i]._se_expand.weight: 'blocks_' + str(i) + '/se/conv2d_1/kernel',
+                model._blocks[i]._bn0.bias: 'blocks_' + str(i) + '/tpu_batch_normalization/beta',
+                model._blocks[i]._bn0.weight: 'blocks_' + str(i) + '/tpu_batch_normalization/gamma',
+                model._blocks[i]._bn0.running_mean: 'blocks_' + str(i) + '/tpu_batch_normalization/moving_mean',
+                model._blocks[i]._bn0.running_var: 'blocks_' + str(i) + '/tpu_batch_normalization/moving_variance',
+                model._blocks[i]._bn1.bias: 'blocks_' + str(i) + '/tpu_batch_normalization_1/beta',
+                model._blocks[i]._bn1.weight: 'blocks_' + str(i) + '/tpu_batch_normalization_1/gamma',
+                model._blocks[i]._bn1.running_mean: 'blocks_' + str(i) + '/tpu_batch_normalization_1/moving_mean',
+                model._blocks[i]._bn1.running_var: 'blocks_' + str(i) + '/tpu_batch_normalization_1/moving_variance',
+                model._blocks[i]._bn2.bias: 'blocks_' + str(i) + '/tpu_batch_normalization_2/beta',
+                model._blocks[i]._bn2.weight: 'blocks_' + str(i) + '/tpu_batch_normalization_2/gamma',
+                model._blocks[i]._bn2.running_mean: 'blocks_' + str(i) + '/tpu_batch_normalization_2/moving_mean',
+                model._blocks[i]._bn2.running_var: 'blocks_' + str(i) + '/tpu_batch_normalization_2/moving_variance',
             }
 
         conversion_table = merge(conversion_table, conversion_table_block)
@@ -123,7 +124,7 @@ def load_efficientnet(model, checkpoint_file, model_name):
     return conversion_table
 
 
-def load_and_save_temporary_tensorflow_model(model_name, model_ckpt, example_img= '../../example/img.jpg'):
+def load_and_save_temporary_tensorflow_model(model_name, model_ckpt, example_img='../../example/img.jpg'):
     """ Loads and saves a TensorFlow model. """
     image_files = [example_img]
     eval_ckpt_driver = eval_ckpt_main.EvalCkptDriver(model_name)
@@ -137,7 +138,6 @@ def load_and_save_temporary_tensorflow_model(model_name, model_ckpt, example_img
 
 
 if __name__ == '__main__':
-
     import sys
     import argparse
 
